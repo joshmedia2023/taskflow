@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173b35">
+<title>TaskFlow — Daftar Tugas</title>
+<style>
+:root{--ink:#19352f;--muted:#71827d;--green:#1e5b4f;--mint:#e9f4ef;--paper:#f5f7f5;--line:#e3eae6;--white:#fff;--amber:#a86b16;--red:#b84b4b;--shadow:0 10px 30px rgba(25,53,47,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}.shell{max-width:1180px;margin:auto;padding:22px 20px 48px}
+.hero{background:linear-gradient(125deg,#173b35,#246b59);border-radius:24px;padding:28px 30px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;width:250px;height:250px;border:1px solid #ffffff20;border-radius:50%;right:-70px;top:-110px;box-shadow:0 0 0 30px #ffffff08,0 0 0 60px #ffffff06}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:800;color:#c5e6d9}.hero h1{font-size:clamp(26px,4vw,38px);letter-spacing:-.04em;margin:8px 0}.hero p{margin:0;color:#d8e9e3;font-size:14px;max-width:560px;line-height:1.6}.hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;position:relative;z-index:1}.today{font-size:12px;color:#e1f1eb;text-align:right;white-space:nowrap}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.metric{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;box-shadow:0 4px 15px #183c3010}.metric-label{font-size:12px;color:var(--muted);font-weight:650}.metric-num{font-size:30px;font-weight:800;letter-spacing:-.05em;margin-top:5px}.metric-sub{font-size:11px;color:#83918c;margin-top:2px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 4px 15px #183c3008}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.tabs{display:flex;gap:6px;flex-wrap:wrap}.tab{border:0;background:#f0f4f1;color:#5c7068;padding:10px 14px;border-radius:11px;font-size:13px;font-weight:750;cursor:pointer}.tab.active{background:var(--green);color:white}.filters{display:grid;grid-template-columns:minmax(180px,1.5fr) repeat(2,minmax(140px,.8fr));gap:10px;margin-bottom:16px}.control{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fff;color:var(--ink);outline:none}.control:focus{border-color:#68a18d;box-shadow:0 0 0 3px #dff0e8}.list-head{display:flex;justify-content:space-between;align-items:center;margin:2px 0 12px;gap:12px}.list-head h2{font-size:17px;margin:0;letter-spacing:-.02em}.result-count{font-size:12px;color:var(--muted)}
+.task-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.task{border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0;transition:transform .15s,border-color .15s}.task:hover{transform:translateY(-2px);border-color:#c5d9ce}.task-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.task-title{font-size:15px;font-weight:800;line-height:1.4;margin:0 0 7px;overflow-wrap:anywhere}.task-desc{font-size:12px;color:#71817a;line-height:1.55;margin:0 0 14px;overflow-wrap:anywhere}.tag{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:8px;font-size:10px;font-weight:800;white-space:nowrap;background:#edf3ef;color:#48665a}.status{font-size:10px;font-weight:800;padding:6px 9px;border-radius:8px;white-space:nowrap}.s-selesai{background:#e5f5eb;color:#247448}.s-berjalan{background:#e7f0ff;color:#315da8}.s-tertunda{background:#fff0dc;color:#9b6212}.s-belum-mulai{background:#f0f1f0;color:#65736d}.priority{font-size:10px;font-weight:800}.p-tinggi{color:#bc4e4e}.p-sedang{color:#a87522}.p-rendah{color:#668174}.meta{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#72827b;margin-bottom:13px}.meta span{display:inline-flex;align-items:center;gap:5px}.progress-head{display:flex;justify-content:space-between;font-size:11px;color:#71817a;margin-bottom:7px}.progress{height:6px;background:#edf1ee;border-radius:99px;overflow:hidden}.progress>span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#2d7763,#79b79b)}.task-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:13px;padding-top:12px;border-top:1px solid #eff2f0}.owner{font-size:11px;font-weight:700;color:#50665c;overflow-wrap:anywhere}.open-link{font-size:11px;color:var(--green);font-weight:800;text-decoration:none}.open-link:hover{text-decoration:underline}.empty,.loading,.error{padding:42px 18px;text-align:center;color:var(--muted);font-size:13px;grid-column:1/-1}.empty strong{display:block;color:var(--ink);font-size:16px;margin-bottom:6px}.footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#89958f;font-size:11px;margin:16px 4px}.refresh{border:1px solid #ffffff50;color:#fff;background:#ffffff12;padding:9px 12px;border-radius:10px;cursor:pointer;font-weight:700;font-size:12px}.refresh:hover{background:#ffffff25}.hidden{display:none!important}
+@media(max-width:760px){.shell{padding:12px 12px 28px}.hero{padding:23px 20px;border-radius:20px}.hero-row{align-items:flex-start;flex-direction:column}.today{text-align:left}.metrics{grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}.metric{padding:14px;border-radius:15px}.metric-num{font-size:26px}.panel{padding:13px;border-radius:17px}.toolbar{align-items:flex-start;flex-direction:column}.tabs{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}.tab{padding:10px 5px;font-size:12px}.filters{grid-template-columns:1fr 1fr}.filters .search{grid-column:1/-1}.task-list{grid-template-columns:1fr;gap:10px}.task{padding:14px}.list-head h2{font-size:16px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="hero">
+    <div class="hero-row">
+      <div><div class="eyebrow">Workspace · Task management</div><h1>Daftar Tugas</h1><p>Pantau agenda harian, mingguan, dan bulanan dalam satu tampilan yang ringkas dan terorganisir.</p></div>
+      <div><div class="today" id="todayLabel">Memuat tanggal…</div><div style="text-align:right;margin-top:12px"><button class="refresh" id="refreshBtn" type="button">↻ Perbarui data</button></div></div>
+    </div>
+  </header>
+  <section class="metrics" aria-label="Ringkasan tugas">
+    <div class="metric"><div class="metric-label">Total Tugas</div><div class="metric-num" id="totalCount">—</div><div class="metric-sub">Sesuai filter aktif</div></div>
+    <div class="metric"><div class="metric-label">Sedang Berjalan</div><div class="metric-num" id="runningCount">—</div><div class="metric-sub">Dalam proses pengerjaan</div></div>
+    <div class="metric"><div class="metric-label">Selesai</div><div class="metric-num" id="doneCount">—</div><div class="metric-sub">Tugas telah dituntaskan</div></div>
+    <div class="metric"><div class="metric-label">Perlu Perhatian</div><div class="metric-num" id="attentionCount">—</div><div class="metric-sub">Tertunda atau melewati tenggat</div></div>
+  </section>
+  <main class="panel">
+    <div class="toolbar">
+      <div class="tabs" role="tablist" aria-label="Filter periode">
+        <button class="tab active" data-period="Semua" role="tab" aria-selected="true">Semua</button>
+        <button class="tab" data-period="Harian" role="tab" aria-selected="false">Harian</button>
+        <button class="tab" data-period="Mingguan" role="tab" aria-selected="false">Mingguan</button>
+        <button class="tab" data-period="Bulanan" role="tab" aria-selected="false">Bulanan</button>
+      </div>
+      <div class="result-count" id="updatedLabel">Menghubungkan ke Google Sheets…</div>
+    </div>
+    <div class="filters">
+      <input class="control search" id="searchInput" type="search" placeholder="⌕ Cari judul, deskripsi, atau PIC…" aria-label="Cari tugas">
+      <select class="control" id="statusFilter" aria-label="Filter status">
+        <option value="">Semua status</option><option>Belum Mulai</option><option>Berjalan</option><option>Tertunda</option><option>Selesai</option>
+      </select>
+      <select class="control" id="priorityFilter" aria-label="Filter prioritas">
+        <option value="">Semua prioritas</option><option>Tinggi</option><option>Sedang</option><option>Rendah</option>
+      </select>
+    </div>
+    <div class="list-head"><h2 id="listTitle">Semua tugas</h2><span class="result-count" id="visibleCount"></span></div>
+    <div class="task-list" id="taskList"><div class="loading">Sedang mengambil data tugas…</div></div>
+  </main>
+  <div class="footer"><span>TaskFlow · Dashboard tugas</span><span>Data diperbarui otomatis saat halaman dibuka atau tombol perbarui ditekan.</span></div>
+</div>
+<script>
+/*
+PENGATURAN:
+1. Deploy Code.gs sebagai Web App, akses: Anyone / Siapa saja.
+2. Salin URL Web App berakhiran /exec ke API_URL di bawah.
+*/
+const API_URL = "https://script.google.com/macros/s/AKfycbzJAQVy-TYvzvDZ4bK1cY_uA7kufmKaYtDSqwNLpvU-QCgs9lVX_F5Qagz68YiA14tw/exec";
+let allTasks = [];
+let activePeriod = "Semua";
+const $ = (id) => document.getElementById(id);
+const fmtDate = (value) => {
+  if (!value) return "Belum ditentukan";
+  const d = new Date(String(value).length === 10 ? value + "T00:00:00" : value);
+  if (Number.isNaN(d.getTime())) return value;
+  return new Intl.DateTimeFormat("id-ID",{day:"numeric",month:"short",year:"numeric"}).format(d);
+};
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = (v) => String(v ?? "").trim().toLowerCase();
+const statusClass = (s) => "s-" + norm(s).replace(/\s+/g,"-");
+const priorityClass = (p) => "p-" + norm(p);
+function showError(message) {
+  $("taskList").innerHTML = `<div class="error"><strong>Data belum dapat dimuat</strong><br>${esc(message)}<br><br>Periksa URL Web App dan izin akses Google Apps Script.</div>`;
+  $("updatedLabel").textContent = "Koneksi belum tersedia";
+}
+function fetchTasks() {
+  if (!API_URL || API_URL.includes("TEMPEL_URL")) {
+    showError("Masukkan URL Web App Apps Script pada variabel API_URL di file index.html.");
+    return;
+  }
+  $("taskList").innerHTML = '<div class="loading">Sedang mengambil data tugas…</div>';
+  $("updatedLabel").textContent = "Memuat data…";
+  const callback = "taskflowCallback_" + Date.now();
+  const timer = setTimeout(() => { cleanup(); showError("Permintaan ke Google Sheets terlalu lama. Coba perbarui kembali."); }, 18000);
+  function cleanup(){clearTimeout(timer);delete window[callback];const old=document.getElementById("gs-request");if(old)old.remove();}
+  window[callback] = (response) => {
+    cleanup();
+    if (!response || !response.ok) { showError(response?.error || "Respons server tidak valid."); return; }
+    allTasks = Array.isArray(response.data) ? response.data : [];
+    render();
+    $("updatedLabel").textContent = "Diperbarui " + new Intl.DateTimeFormat("id-ID",{hour:"2-digit",minute:"2-digit"}).format(new Date());
+  };
+  const script = document.createElement("script");
+  script.id = "gs-request";
+  script.src = API_URL + (API_URL.includes("?") ? "&" : "?") + "callback=" + callback + "&t=" + Date.now();
+  script.onerror = () => { cleanup(); showError("Tidak bisa terhubung ke endpoint Apps Script."); };
+  document.body.appendChild(script);
+}
+function filteredTasks() {
+  const query = norm($("searchInput").value), status = norm($("statusFilter").value), priority = norm($("priorityFilter").value);
+  return allTasks.filter(t => {
+    const periodOk = activePeriod === "Semua" || norm(t.kategori) === norm(activePeriod);
+    const text = norm([t.id,t.judul,t.deskripsi,t.pic,t.catatan].join(" "));
+    return periodOk && (!query || text.includes(query)) && (!status || norm(t.status) === status) && (!priority || norm(t.prioritas) === priority);
+  }).sort((a,b) => {
+    const order = {"Tertunda":0,"Berjalan":1,"Belum Mulai":2,"Selesai":3};
+    const sa = order[a.status] ?? 4, sb = order[b.status] ?? 4;
+    if(sa !== sb) return sa-sb;
+    return String(a.tenggat || "9999-12-31").localeCompare(String(b.tenggat || "9999-12-31"));
+  });
+}
+function render() {
+  const tasks = filteredTasks();
+  $("totalCount").textContent = tasks.length;
+  $("runningCount").textContent = tasks.filter(t => norm(t.status)==="berjalan").length;
+  $("doneCount").textContent = tasks.filter(t => norm(t.status)==="selesai").length;
+  const today = new Date(); today.setHours(0,0,0,0);
+  $("attentionCount").textContent = tasks.filter(t => {
+    const due = t.tenggat ? new Date(String(t.tenggat).slice(0,10)+"T00:00:00") : null;
+    return norm(t.status)==="tertunda" || (due && !Number.isNaN(due.getTime()) && due<today && norm(t.status)!=="selesai");
+  }).length;
+  $("listTitle").textContent = activePeriod==="Semua" ? "Semua tugas" : "Tugas " + activePeriod.toLowerCase();
+  $("visibleCount").textContent = tasks.length + " tugas ditampilkan";
+  if(!tasks.length) {
+    $("taskList").innerHTML = '<div class="empty"><strong>Belum ada tugas yang cocok</strong>Coba ubah kata kunci atau filter yang dipilih.</div>';
+    return;
+  }
+  $("taskList").innerHTML = tasks.map(t => {
+    const progress = Math.max(0,Math.min(100,Number(t.progress)||0));
+    const due = t.tenggat ? fmtDate(t.tenggat) : "Belum ditentukan";
+    const href = String(t.link||"").trim();
+    const link = /^https?:\/\//i.test(href) ? `<a class="open-link" href="${esc(href)}" target="_blank" rel="noopener noreferrer">Buka tautan ↗</a>` : "";
+    return `<article class="task">
+      <div class="task-top"><div style="min-width:0"><div class="tag">${esc(t.kategori||"Tanpa kategori")}</div><h3 class="task-title" style="margin-top:10px">${esc(t.judul||"Tugas tanpa judul")}</h3></div><span class="status ${statusClass(t.status)}">${esc(t.status||"Belum Mulai")}</span></div>
+      <p class="task-desc">${esc(t.deskripsi||"Tidak ada deskripsi.")}</p>
+      <div class="meta"><span>◷ Tenggat: ${esc(due)}</span><span class="priority ${priorityClass(t.prioritas)}">◆ ${esc(t.prioritas||"Prioritas normal")}</span></div>
+      <div class="progress-head"><span>Progress</span><strong>${progress}%</strong></div><div class="progress"><span style="width:${progress}%"></span></div>
+      <div class="task-foot"><span class="owner">♙ ${esc(t.pic||"Belum ada PIC")}</span>${link}</div>
+    </article>`;
+  }).join("");
+}
+document.querySelectorAll(".tab").forEach(btn => btn.addEventListener("click",()=>{
+  activePeriod=btn.dataset.period;
+  document.querySelectorAll(".tab").forEach(b=>{const active=b===btn;b.classList.toggle("active",active);b.setAttribute("aria-selected",String(active));});
+  render();
+}));
+["searchInput","statusFilter","priorityFilter"].forEach(id=>$(id).addEventListener(id==="searchInput"?"input":"change",render));
+$("refreshBtn").addEventListener("click",fetchTasks);
+$("todayLabel").textContent = new Intl.DateTimeFormat("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date());
+fetchTasks();
+</script>
+</body>
+</html>
